@@ -17,19 +17,14 @@ program.version(pkg.version);
 
 program
   .option("-c --config <webpack-config>", "additional webpack configuration")
-  .option("-p --port <port>", "port to serve from (default: 9000)")
-  .option("-s --static", "serve pre-built lambda files")
+  .option("-p --port <port>", "port to serve from (default: 9000)");
 
 program
   .command("serve <dir>")
   .description("serve and watch functions")
   .action(function(cmd, options) {
-    console.log("Starting server");
-    var static = Boolean(program.static);
-    var server = serve.listen(program.port || 9000, static);
-    if(static) {
-      return
-    }
+    console.log("netlify-lambda: Starting server");
+    var server = serve.listen(program.port || 9000);
     build.watch(cmd, program.config, function(err, stats) {
       if (err) {
         console.error(err);
@@ -48,7 +43,7 @@ program
   .command("build <dir>")
   .description("build functions")
   .action(function(cmd, options) {
-    console.log("Building functions");
+    console.log("netlify-lambda: Building functions");
     build
       .run(cmd, program.config)
       .then(function(stats) {
